@@ -1,0 +1,43 @@
+CMD>mysql -uroot -proot
+
+create database w1 character set utf8;
+
+use w1; //打开数据库w1
+
+drop table ORGMODEL_ORG;
+create table ORGMODEL_ORG (id int auto_increment primary key,
+	name varchar(200),priority int,parentid int,
+	path varchar(200),fullname varchar(500));
+
+drop table ORGMODEL_USER;
+create table ORGMODEL_USER (id int auto_increment primary key,
+	loginid varchar(100),name varchar(200),pwd varchar(100),
+	birthday date,telno varchar(100),email varchar(100),
+	status int,oid int,imgid int);
+
+drop table T_FILE;
+create table T_FILE(id int auto_increment primary key,
+	name varchar(200),contexttype varchar(100),length bigint,dt date,content mediumblob);
+
+drop table T_FUNCTION;
+create table T_FUNCTION(id int auto_increment primary key,
+	name varchar(100),url varchar(100),priority int,icon varchar(100),path varchar(500),
+	parentid int,type varchar(10));
+
+
+修改mysql环境字符集
+mysql>charset gbk;
+mysql>use ec4_proj;
+
+insert into ORGMODEL_USER(loginid,name,pwd,birthday,telno,email,status,oid)
+	values('admin','超级管理员','c4ca4238a0b923820dcc509a6f75849b','2018-08-08','13100000000','admin@test.com',
+	0,null);
+
+charset gbk;
+
+insert into ORGMODEL_ORG(name,priority,parentid) values('集团公司',0,null);
+insert into ORGMODEL_ORG(name,priority,parentid) values('销售公司',1,1);
+insert into ORGMODEL_ORG(name,priority,parentid) values('生产公司',2,1);
+insert into ORGMODEL_ORG(name,priority,parentid) values('财务部',1,2);
+insert into ORGMODEL_ORG(name,priority,parentid) values('审计科',1,4);
+insert into ORGMODEL_ORG(name,priority,parentid) values('生产车间',2,3);

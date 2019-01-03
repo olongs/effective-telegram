@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.mapper.GoodMapper">
+    <select id="findGoods" resultType="com.test.model.GoodInfo" parameterType="string">
+    SELECT g.*,GROUP_CONCAT(t.tname) tnames,GROUP_CONCAT(t.tid) tids
+    FROM t_zhong0102 z
+    LEFT JOIN t_good0102 g ON g.id=z.gid
+    LEFT JOIN t_type0102 t ON t.tid=z.tid
+    GROUP BY z.gid
+    </select>
+    <select id="findGoodById" resultType="com.test.model.GoodInfo" parameterType="integer">
+    SELECT * FROM t_good0102 g WHERE  id=#{id}
+    </select>
+
+    <insert id="saveGoods" parameterType="com.test.model.GoodInfo" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+insert t_good0102(gname,brand,`size`,`update`) values(#{gname},#{brand},#{size},#{update});
+
+</insert>
+    <insert id="saveZhong" >
+ INSERT t_zhong0102(gid,tid) VALUES(#{gid},#{tid})
+    </insert>
+<delete id="deleteGoodById" parameterType="Integer" >
+  DELETE FROM t_good0102 WHERE id=#{id}
+</delete>
+    <delete id="deleteZhong" parameterType="Integer" >
+  DELETE FROM t_zhong0102 WHERE gid=#{gid}
+</delete>
+    <update id="updateGood" parameterType="com.test.model.GoodInfo" >
+        UPDATE t_good0102 SET gname=#{gname},brand=#{brand},`size`=#{size},`update`=#{update} WHERE id=#{id}
+    </update>
+    <select id="getTypeList" resultType="com.test.model.GoodType">
+        SELECT  * FROM t_type0102
+    </select>
+</mapper>

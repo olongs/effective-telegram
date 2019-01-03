@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="EC5_Proj:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="EC4_Proj.war">
+      <element id="artifact" artifact-name="EC5_Proj:war exploded" />
+    </root>
+  </artifact>
+</component>

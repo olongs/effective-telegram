@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.mapper.OrgModelMapper">
+
+	<select id="login" resultType="com.test.model.UserInfo">
+		select * from ORGMODEL_USER where loginid=#{loginId} and pwd=#{pwd}
+	</select>
+	<!-- 
+		数据库表ORGMODEL_USER的主键是数据库自动生成，如果保存UserInfo对象需要返回主键ID
+		必须如下配置
+		useGeneratedKeys="true" 代表对象UserInfo需要使用主键ID
+		keyColumn="id" 是主键对应数据库表中字段的名称
+		keyProperty="id" 是实体类UserInfo主键对应的属性名称
+	 -->
+	<insert id="saveUser" parameterType="com.test.model.UserInfo"
+		useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+		insert into ORGMODEL_USER(loginid,name,pwd,birthday,telno,email,status,oid,imgId)
+		values(#{loginId},#{name},#{pwd},#{birthday},#{telNo},#{email},#{status},#{oid},#{imgId})
+	</insert>
+	<update id="updateUser" parameterType="com.test.model.UserInfo">
+		update ORGMODEL_USER set loginid=#{loginId},name=#{name},pwd=#{pwd},
+			birthday=#{birthday},telno=#{telNo},email=#{email},status=#{status},
+			oid=#{oid},imgid=#{imgId} where id=#{id}
+	</update>
+	<delete id="deleteUser" parameterType="Integer">
+		delete from ORGMODEL_USER where id=#{id}
+	</delete>
+	<update id="logicDeleteUser" parameterType="Integer">
+		update ORGMODEL_USER set status=2 where id=#{id}
+	</update>
+	<select id="getUserById" resultType="com.test.model.UserInfo">
+		select * from ORGMODEL_USER where id=#{id}
+	</select>
+	<select id="getUserByLoginId" resultType="com.test.model.UserInfo">
+		select * from ORGMODEL_USER where loginId=#{loginId}
+	</select>
+	<select id="getUserListByOid" resultType="com.test.model.UserInfo">
+		select * from ORGMODEL_USER where oid=#{oid}
+	</select>
+	<select id="findUserListByName" resultType="com.test.model.UserInfo">
+		select u.*,o.name as oname from ORGMODEL_USER u left join ORGMODEL_ORG o 
+			on u.oid=o.id where u.name like '%${name}%'
+	</select>
+	<select id="getOrgList" resultType="com.test.model.OrgInfo">
+		select * from ORGMODEL_ORG
+	</select>
+	<select id="getRootOrg" resultType="com.test.model.OrgInfo">
+		select * from ORGMODEL_ORG where parentid is null
+	</select>
+	<select id="getOrgById" resultType="com.test.model.OrgInfo">
+		select * from ORGMODEL_ORG where id=#{id}
+	</select>
+	<select id="getChildOrg" resultType="com.test.model.OrgInfo">
+		select * from ORGMODEL_ORG where parentid=#{id}
+	</select>
+	<insert id="saveOrg" parameterType="com.test.model.OrgInfo"
+		useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+		insert into ORGMODEL_ORG(name,parentId,priority,path,fullname)
+		values(#{name},#{parentId},#{priority},#{path},#{fullName})
+	</insert>
+	<select id="getRootFunc" resultType="com.test.model.FunctionInfo">
+		select * from T_FUNCTION where parentid is null
+	</select>
+	<select id="getChildFunc" resultType="com.test.model.FunctionInfo">
+		select * from T_FUNCTION where parentid=#{id} order by priority
+	</select>
+	<insert id="saveFunc" parameterType="com.test.model.FunctionInfo"
+		useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+		insert into T_FUNCTION(name,url,icon,priority,path,parentid,type)
+		values(#{name},#{url},#{icon},#{priority},#{path},#{parentId},#{type})
+	</insert>
+	<update id="updateFunc" parameterType="com.test.model.FunctionInfo">
+		update T_FUNCTION set name=#{name},url=#{url},icon=#{icon},priority=#{priority},
+			path=#{path},parentid=#{parentId},type=#{type}
+		where id=#{id}
+	</update>
+	<delete id="deleteFunc" parameterType="Integer">
+		delete from T_FUNCTION where id=#{id}
+	</delete>
+
+	<insert id="saveFile" parameterType="com.test.model.FileInfo" statementType="PREPARED"
+		useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+		insert into T_FILE(name,contexttype,length,dt,content) values (#{name},#{contextType},
+			#{length},#{dt},#{content,jdbcType=BLOB})
+	</insert>
+	<select id="getFileById" resultType="com.test.model.FileInfo" statementType="PREPARED">
+		select * from T_FILE where id=#{id}
+	</select>
+</mapper>
